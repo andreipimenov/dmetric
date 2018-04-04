@@ -1,4 +1,0 @@
-production:
-    dialect: postgres
-    datasource: dbname=monitor sslmode=disable
-    dir: var/postgres
