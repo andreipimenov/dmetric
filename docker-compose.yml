@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=monitor
+
+  redis:
+    image: redis
+
+  monitor:
+    build: .
+    ports:
+      - 8080:8080
+    command: monitor run
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - PORT=8080
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=monitor
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - REDIS_PREFIX=WAREHOUSE:PRICE
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=1
