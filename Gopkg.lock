@@ -16,9 +16,39 @@
   revision = "e83ac2304db3c50cf03d96a2fcd39009d458bc35"
   version = "v3.3.2"
 
+[[projects]]
+  name = "github.com/gomodule/redigo"
+  packages = [
+    "internal",
+    "redis"
+  ]
+  revision = "9c11da706d9b7902c6da69c592f75637793fe121"
+  version = "v2.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/lib/pq"
+  packages = [
+    ".",
+    "oid"
+  ]
+  revision = "d34b9ff171c21ad295489235aec8b6626023cd04"
+
+[[projects]]
+  branch = "v3"
+  name = "gopkg.in/alexcesaro/quotedprintable.v3"
+  packages = ["."]
+  revision = "2caba252f4dc53eaf6b553000885530023f54623"
+
+[[projects]]
+  branch = "v2"
+  name = "gopkg.in/gomail.v2"
+  packages = ["."]
+  revision = "81ebce5c23dfd25c6c67194b37d3dd3f338c98b1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fbaf4fc5873a54d080a70dfc1aa827fd65a311a05958d0c8a0138ece49bbc06e"
+  inputs-digest = "4f720ba1aaecadf1a7a4389ff12e8970a585cdeaff306e981d0ed733a5957300"
   solver-name = "gps-cdcl"
   solver-version = 1

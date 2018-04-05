@@ -24,7 +24,22 @@ services:
       - redis
     environment:
       - PORT=8080
-      - DB_URL=postgres://postgres:postgres@localhost:5432/monitor?sslmode=disable
+      - DB_URL=postgres://postgres:postgres@postgres:5432/monitor?sslmode=disable
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=1
+      - SMTP_HOST=smtp.yandex.ru
+      - SMTP_PORT=587
+      - SMTP_LOGIN=dmetric@yandex.ru
+      - SMTP_PASSWORD=Dmetric.
+      - MAIL_TO=dmetric@yandex.ru
+      - METRIC1_MIN=0
+      - METRIC1_MAX=10
+      - METRIC2_MIN=0
+      - METRIC2_MAX=10
+      - METRIC3_MIN=0
+      - METRIC3_MAX=10
+      - METRIC4_MIN=0
+      - METRIC4_MAX=10
+      - METRIC5_MIN=0
+      - METRIC5_MAX=10

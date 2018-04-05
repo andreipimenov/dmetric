@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/andreipimenov/dmetric/driver/mail"
 	"github.com/andreipimenov/dmetric/driver/postgres"
 	"github.com/andreipimenov/dmetric/driver/redis"
 	"github.com/andreipimenov/goto/config"
@@ -32,10 +33,13 @@ func main() {
 		log.Fatal(err)
 	}
 
+	mail := mail.NewMail(c.SMTPHost, c.SMTPPort, c.SMTPLogin, c.SMTPPassword)
+
 	a := &Application{
-		Config: c,
-		Cache:  redis,
-		DB:     postgres,
+		Config:   c,
+		Cache:    redis,
+		DB:       postgres,
+		Notifier: mail,
 	}
 
 	r := NewRouter(a)

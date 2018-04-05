@@ -15,10 +15,10 @@ type APIMessage struct {
 
 //APIMetrics - metrics from device
 type APIMetrics struct {
-	Metric1   int        `json:"metric_1"`
-	Metric2   int        `json:"metric_2"`
-	Metric3   int        `json:"metric_3"`
-	Metric4   int        `json:"metric_4"`
-	Metric5   int        `json:"metric_5"`
-	LocalTime *time.Time `json:"local_time"`
+	Metric1   interface{} `json:"metric_1"`
+	Metric2   interface{} `json:"metric_2"`
+	Metric3   interface{} `json:"metric_3"`
+	Metric4   interface{} `json:"metric_4"`
+	Metric5   interface{} `json:"metric_5"`
+	LocalTime *time.Time  `json:"local_time"`
 }

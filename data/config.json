@@ -1,7 +1,34 @@
 {
+    "metric_limits": {
+        "metric_1": {
+            "min": 0,
+            "max": 10
+        },
+        "metric_2": {
+            "min": 0,
+            "max": 10
+        },
+        "metric_3": {
+            "min": 0,
+            "max": 10
+        },
+        "metric_4": {
+            "min": 0,
+            "max": 10
+        },
+        "metric_5": {
+            "min": 0,
+            "max": 10
+        }
+    },
     "port": 8080,
-    "db_url": "postgres://postgres:postgres@localhost:5432/monitor?sslmode=disable",
+    "db_url": "postgres://postgres:postgres@postgres:5432/monitor?sslmode=disable",
     "redis_host": "redis",
     "redis_port": 6379,
-    "redis_db": 1
+    "redis_db": 1,
+    "smtp_host": "smtp.yandex.ru",
+    "smtp_port": 587,
+    "smtp_login": "dmetric@yandex.ru",
+    "smtp_password": "Dmetric.",
+    "mail_to": "dmetric@yandex.ru"
 }
