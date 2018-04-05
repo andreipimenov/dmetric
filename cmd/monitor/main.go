@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/andreipimenov/dmetric/driver/postgres"
+	"github.com/andreipimenov/dmetric/driver/redis"
 	"github.com/andreipimenov/goto/config"
 )
 
@@ -20,8 +22,20 @@ func main() {
 		log.Fatal(err)
 	}
 
+	redis, err := redis.NewRedis(fmt.Sprintf("%s:%d", c.RedisHost, c.RedisPort), c.RedisDB)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	postgres, err := postgres.NewPostgres(c.DBURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	a := &Application{
 		Config: c,
+		Cache:  redis,
+		DB:     postgres,
 	}
 
 	r := NewRouter(a)
