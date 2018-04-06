@@ -1,0 +1,104 @@
+swagger: "2.0"
+
+info:
+  version: "0.0.1"
+  title: Dmetric
+  description: Application for device metrics monitoring
+host: "127.0.0.1"
+basePath: /api/v1
+tags:
+  - name: Ping
+  - name: Devices
+
+paths:
+  /api/v1/ping:
+    get:
+      tags:
+        - Ping
+      summary: |
+        Check if server launched and ready for communication
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/PingResponse'
+
+  /api/v1/devices/{id}/metrics:
+    post:
+      tags:
+        - Devices
+      summary: Devices should send metrics on this endpoint
+      parameters:
+        - in: path
+          name: id
+          type: int
+          required: true
+        - in: body
+          required: true
+          description: Object with up-to 5 metrics and local device time (RFC3339 string representation)
+          schema:
+            $ref: '#/definitions/Metrics'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/MessageResponse'
+        400:
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+definitions:
+  Metrics:
+    type: object
+    properties:
+      metric_1:
+        type: integer
+        example: 5
+      metric_2:
+        type: integer
+        example: 5
+      metric_3:
+        type: integer
+        example: 5
+      metric_4:
+        type: integer
+        example: 5
+      metric_5:
+        type: integer
+        example: 5
+      local_time:
+        type: string
+        description: time in format RFC3339
+        example: '2018-04-06T13:00:00Z'
+  PingResponse:
+    type: object
+    properties:
+      message:
+        type: string
+        example: pong
+  MessageResponse:
+    type: object
+    properties:
+      message:
+        type: string
+        description: Message about status of action
+        example: OK
+  ErrorResponse:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Common error type
+            message:
+              type: string
+              description: Detailed error message
