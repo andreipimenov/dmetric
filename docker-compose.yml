@@ -31,7 +31,7 @@ services:
       - SMTP_HOST=smtp.yandex.ru
       - SMTP_PORT=587
       - SMTP_LOGIN=dmetric@yandex.ru
-      - SMTP_PASSWORD=Dmetric.
+      - SMTP_PASSWORD=Dmetric/
       - MAIL_TO=dmetric@yandex.ru
       - METRIC1_MIN=0
       - METRIC1_MAX=10

@@ -23,7 +23,7 @@ REDIS_DB=${REDIS_DB:-1}
 SMTP_HOST=${SMTP_HOST:-smtp.yandex.ru}
 SMTP_PORT=${SMTP_PORT:-587}
 SMTP_LOGIN=${SMTP_LOGIN:-dmetric@yandex.ru}
-SMTP_PASSWORD=${SMTP_PASSWORD:-Dmetric.}
+SMTP_PASSWORD=${SMTP_PASSWORD:-Dmetric/}
 MAIL_TO=${MAIL_TO:-dmetric@yandex.ru}
 
 echo '

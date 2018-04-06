@@ -31,3 +31,11 @@ func (p *Postgres) Ping() error {
 func (p *Postgres) Exec(q string, args ...interface{}) (sql.Result, error) {
 	return p.DB.Exec(q, args...)
 }
+
+func (p *Postgres) Query(q string, args ...interface{}) (*sql.Rows, error) {
+	return p.DB.Query(q, args...)
+}
+
+func (p *Postgres) QueryRow(q string, args ...interface{}) *sql.Row {
+	return p.DB.QueryRow(q, args...)
+}

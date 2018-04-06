@@ -62,7 +62,7 @@ func PingHandler() http.HandlerFunc {
 }
 
 //CheckMetric - helper function to check received metrics for type and value and collect alerts and errs
-func CheckMetric(n int, metric interface{}, min int64, max int64, errs []*model.APIMessage, alerts []*model.APIMessage) {
+func CheckMetric(n int, metric interface{}, min int64, max int64, errs *[]*model.APIMessage, alerts *[]*model.APIMessage) {
 	switch v := metric.(type) {
 	case nil:
 		return
@@ -71,22 +71,33 @@ func CheckMetric(n int, metric interface{}, min int64, max int64, errs []*model.
 		if i >= min && i <= max {
 			return
 		}
-		alerts = append(alerts, &model.APIMessage{
+		*alerts = append(*alerts, &model.APIMessage{
 			Code:    "Alert",
 			Message: fmt.Sprintf("Metric #%d with value %d is out of range [%d : %d]", n, i, min, max),
 		})
 	default:
-		errs = append(errs, &model.APIMessage{
+		*errs = append(*errs, &model.APIMessage{
 			Code:    "Error",
 			Message: fmt.Sprintf("Metric #%d with value %v is not of type int64", n, metric),
 		})
 	}
+	return
 }
 
 //MetricsHandler - receive metrics from specific device
 func MetricsHandler(a *Application) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		deviceID := chi.URLParam(r, "id")
+
+		var deviceExists bool
+		a.DB.QueryRow("SELECT EXISTS (SELECT 1 FROM devices WHERE id=$1)", deviceID).Scan(&deviceExists)
+		if !deviceExists {
+			WriteErrorResponse(w, http.StatusNotFound, &model.APIMessage{
+				Code: "NotFound", Message: fmt.Sprintf("Device with id %s not found", deviceID),
+			})
+			return
+		}
+
 		req := &model.APIMetrics{}
 		err := json.NewDecoder(r.Body).Decode(req)
 		if err != nil {
@@ -98,11 +109,11 @@ func MetricsHandler(a *Application) http.HandlerFunc {
 
 		var errs []*model.APIMessage
 		var alerts []*model.APIMessage
-		CheckMetric(1, req.Metric1, a.Config.MetricLimits.Metric1.Min, a.Config.MetricLimits.Metric1.Max, errs, alerts)
-		CheckMetric(2, req.Metric2, a.Config.MetricLimits.Metric2.Min, a.Config.MetricLimits.Metric2.Max, errs, alerts)
-		CheckMetric(3, req.Metric3, a.Config.MetricLimits.Metric3.Min, a.Config.MetricLimits.Metric3.Max, errs, alerts)
-		CheckMetric(4, req.Metric4, a.Config.MetricLimits.Metric4.Min, a.Config.MetricLimits.Metric4.Max, errs, alerts)
-		CheckMetric(5, req.Metric5, a.Config.MetricLimits.Metric5.Min, a.Config.MetricLimits.Metric5.Max, errs, alerts)
+		CheckMetric(1, req.Metric1, a.Config.MetricLimits.Metric1.Min, a.Config.MetricLimits.Metric1.Max, &errs, &alerts)
+		CheckMetric(2, req.Metric2, a.Config.MetricLimits.Metric2.Min, a.Config.MetricLimits.Metric2.Max, &errs, &alerts)
+		CheckMetric(3, req.Metric3, a.Config.MetricLimits.Metric3.Min, a.Config.MetricLimits.Metric3.Max, &errs, &alerts)
+		CheckMetric(4, req.Metric4, a.Config.MetricLimits.Metric4.Min, a.Config.MetricLimits.Metric4.Max, &errs, &alerts)
+		CheckMetric(5, req.Metric5, a.Config.MetricLimits.Metric5.Min, a.Config.MetricLimits.Metric5.Max, &errs, &alerts)
 		if len(errs) > 0 {
 			WriteErrorResponse(w, http.StatusBadRequest, errs...)
 			return
@@ -123,9 +134,11 @@ func MetricsHandler(a *Application) http.HandlerFunc {
 
 		if len(alerts) > 0 {
 			alert, _ := json.Marshal(alerts)
-			a.Cache.Set(fmt.Sprintf("DEVICE:%d:ALERTS", deviceID), string(alert))
+			a.Cache.Set(fmt.Sprintf("DEVICE:%s:ALERT", deviceID), string(alert))
 			a.DB.Exec(`INSERT INTO device_alerts(device_id, message) VALUES($1, $2)`, deviceID, string(alert))
+			go a.Notifier.Send(a.Config.MailTo, fmt.Sprintf("Device %s - Notification", deviceID), string(alert))
 		}
+
 		WriteResponse(w, http.StatusCreated, &model.APIMessage{
 			Message: "OK",
 		})
