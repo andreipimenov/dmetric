@@ -17,7 +17,7 @@ docker run -p 3000:8080 -e "API_URL=swagger.yaml" -v $(pwd)/doc/swagger.yaml:/us
 #### Пример запроса к API
 Отправка метрик от девайса 15
 ```
-curl -X POST -d '{"metric_1":5, "metric_2":6, "metric_3":7, "metric_4":8, "metric_5":9, "local_time": "2018-04-06T13:00:00Z"}' 127.0.0.1:8080/api/v1/device/15/metrics
+curl -X POST -d '{"metric_1":5, "metric_2":6, "metric_3":7, "metric_4":8, "metric_5":9, "local_time": "2018-04-06T13:00:00Z"}' 127.0.0.1:8080/api/v1/devices/15/metrics
 
 {"message":"OK"}
 ```
